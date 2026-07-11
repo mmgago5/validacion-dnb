@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validación de Inscripciones · Escuela de Especialidades DNB</title>
+<style>
+  :root{
+    --rojo-dnb:#A31E22;
+    --rojo-oscuro:#6E1215;
+    --oro:#C89B3C;
+    --oro-claro:#E7C877;
+    --carbon:#1B1815;
+    --carbon-suave:#2C2723;
+    --hueso:#F3EEE5;
+    --hueso-suave:#E9E2D3;
+    --gris-texto:#6B6255;
+    --verde-ok:#2F6B3E;
+    --rojo-error:#A31E22;
+    --font-display: 'Oswald-fallback', 'Arial Narrow', Impact, sans-serif;
+    --font-body: 'Inter-fallback', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Roboto Mono', ui-monospace, monospace;
+  }
+
+  @font-face{
+    font-family:'Oswald-fallback';
+    src:local('Oswald');
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--hueso);
+    color:var(--carbon);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{background:var(--oro-claro); color:var(--carbon);}
+
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(120% 140% at 15% -10%, rgba(200,155,60,0.18), transparent 55%),
+      linear-gradient(155deg, var(--carbon) 0%, var(--rojo-oscuro) 62%, var(--rojo-dnb) 100%);
+    color:var(--hueso);
+    padding:64px 24px 80px;
+    overflow:hidden;
+  }
+
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+
+  .hero-inner{
+    max-width:960px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+  }
+
+  .badge-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:36px;
+  }
+
+  .badge-row .line{
+    height:1px;
+    flex:1;
+    background:linear-gradient(90deg, var(--oro), transparent);
+  }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--oro-claro);
+    white-space:nowrap;
+  }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:32px;
+    align-items:center;
+  }
+
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+    font-size:clamp(34px, 6vw, 58px);
+    line-height:1.02;
+  }
+
+  .hero h1 span{color:var(--oro-claro);}
+
+  .hero p.lead{
+    margin-top:18px;
+    max-width:520px;
+    font-size:16px;
+    color:rgba(243,238,229,0.82);
+  }
+
+  .shield{
+    flex-shrink:0;
+    width:118px;
+    height:118px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #C89B3C;
+    box-shadow:0 0 0 4px rgba(231,200,119,0.15);
+  }
+
+  .hero-status{
+    margin-top:34px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border:1px solid rgba(231,200,119,0.35);
+    border-radius:2px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    color:var(--oro-claro);
+    background:rgba(0,0,0,0.18);
+  }
+
+  .hero-status .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--oro-claro);
+    box-shadow:0 0 0 3px rgba(231,200,119,0.2);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:64px 24px;}
+  .shell{max-width:960px; margin:0 auto;}
+
+  .section-head{margin-bottom:40px;}
+  .section-head .num-tag{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--rojo-dnb);
+    margin-bottom:10px;
+  }
+  .section-head h2{
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    font-size:clamp(24px,3.4vw,32px);
+    letter-spacing:0.01em;
+  }
+  .section-head p{color:var(--gris-texto); margin-top:10px; max-width:620px; font-size:15px;}
+
+  /* ---------- PROTOCOLO (steps) ---------- */
+  .protocolo{background:var(--hueso);}
+
+  .steps{
+    position:relative;
+    border-left:2px solid var(--hueso-suave);
+    margin-left:22px;
+  }
+
+  .step{
+    position:relative;
+    padding:0 0 38px 40px;
+  }
+  .step:last-child{padding-bottom:0;}
+
+  .step-marker{
+    position:absolute;
+    left:-23px;
+    top:0;
+    width:44px; height:44px;
+    border-radius:50%;
+    background:var(--carbon);
+    color:var(--hueso);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-display);
+    font-size:17px;
+    border:3px solid var(--hueso);
+    box-shadow:0 0 0 2px var(--hueso-suave);
+  }
+
+  .step.is-critical .step-marker{
+    background:var(--rojo-dnb);
+  }
+
+  .step-body h3{
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    font-size:17px;
+    letter-spacing:0.01em;
+    margin-bottom:6px;
+    padding-top:8px;
+  }
+
+  .step-body p{color:var(--gris-texto); font-size:14.5px; max-width:600px;}
+
+  .step-flag{
+    display:inline-block;
+    margin-top:10px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:2px;
+  }
+  .step-flag.warn{background:rgba(163,30,34,0.1); color:var(--rojo-dnb); border:1px solid rgba(163,30,34,0.25);}
+  .step-flag.ok{background:rgba(47,107,62,0.1); color:var(--verde-ok); border:1px solid rgba(47,107,62,0.25);}
+
+  /* ---------- CURSOS ---------- */
+  .cursos{background:var(--carbon); color:var(--hueso);}
+  .cursos .section-head .num-tag{color:var(--oro-claro);}
+  .cursos .section-head p{color:rgba(243,238,229,0.6);}
+
+  .curso-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px,1fr));
+    gap:14px;
+  }
+
+  .curso-card{
+    background:var(--carbon-suave);
+    border:1px solid rgba(243,238,229,0.1);
+    border-radius:3px;
+    padding:20px;
+    cursor:pointer;
+    transition:border-color .18s ease, transform .18s ease, background .18s ease;
+    text-align:left;
+    color:var(--hueso);
+    font-family:var(--font-body);
+  }
+  .curso-card:hover{border-color:rgba(231,200,119,0.4); transform:translateY(-2px);}
+  .curso-card:focus-visible{outline:2px solid var(--oro-claro); outline-offset:2px;}
+
+  .curso-card.selected{
+    border-color:var(--oro-claro);
+    background:linear-gradient(155deg, rgba(200,155,60,0.14), rgba(163,30,34,0.1));
+  }
+
+  .curso-card .tag{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--oro-claro);
+    display:block;
+    margin-bottom:10px;
+  }
+  .curso-card h4{
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    font-size:16px;
+    letter-spacing:0.01em;
+    margin-bottom:6px;
+  }
+  .curso-card .meta{font-size:12.5px; color:rgba(243,238,229,0.55);}
+
+  .curso-card .check{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.05em;
+    color:rgba(243,238,229,0.35);
+  }
+  .curso-card.selected .check{color:var(--oro-claro);}
+  .curso-card .check svg{width:13px; height:13px; opacity:0;}
+  .curso-card.selected .check svg{opacity:1;}
+
+  /* ---------- FORM ---------- */
+  .formulario{background:var(--hueso-suave);}
+
+  .form-shell{
+    background:#fff;
+    border:1px solid rgba(27,24,21,0.08);
+    border-radius:4px;
+    padding:36px;
+  }
+
+  fieldset{border:none; padding:0; margin:0;}
+
+  .form-row{margin-bottom:20px;}
+  .form-row label{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gris-texto);
+    margin-bottom:7px;
+  }
+  .form-row input, .form-row select{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid rgba(27,24,21,0.16);
+    border-radius:2px;
+    font-family:var(--font-body);
+    font-size:14.5px;
+    background:var(--hueso);
+    color:var(--carbon);
+    transition:border-color .15s ease;
+  }
+  .form-row input:focus, .form-row select:focus{
+    outline:none;
+    border-color:var(--rojo-dnb);
+    background:#fff;
+  }
+  .form-row .hint{font-size:12px; color:var(--gris-texto); margin-top:6px;}
+
+  .curso-elegido{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:var(--hueso-suave);
+    border:1px dashed rgba(27,24,21,0.2);
+    border-radius:2px;
+    padding:14px 16px;
+    margin-bottom:24px;
+    font-size:13.5px;
+  }
+  .curso-elegido strong{font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.01em;}
+  .curso-elegido button{
+    background:none; border:none; color:var(--rojo-dnb);
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.05em;
+    text-transform:uppercase; cursor:pointer; text-decoration:underline;
+  }
+
+
+  .btn-enviar{
+    width:100%;
+    padding:16px;
+    background:var(--rojo-dnb);
+    color:var(--hueso);
+    border:none;
+    border-radius:2px;
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    font-size:15px;
+    cursor:pointer;
+    transition:background .15s ease, opacity .15s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .btn-enviar:hover{background:var(--rojo-oscuro);}
+  .btn-enviar:disabled{opacity:0.55; cursor:not-allowed;}
+
+  .spinner{
+    width:15px; height:15px;
+    border:2px solid rgba(243,238,229,0.35);
+    border-top-color:var(--hueso);
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    display:none;
+  }
+  .btn-enviar.loading .spinner{display:inline-block;}
+  .btn-enviar.loading .btn-label{opacity:0.7;}
+
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- RESULT PANEL ---------- */
+  .resultado{
+    margin-top:22px;
+    border-radius:2px;
+    padding:20px 22px;
+    display:none;
+    animation:reveal .3s ease;
+  }
+  @keyframes reveal{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .resultado.show{display:block;}
+
+  .resultado.ok{
+    background:rgba(47,107,62,0.08);
+    border:1px solid rgba(47,107,62,0.3);
+  }
+  .resultado.error{
+    background:rgba(163,30,34,0.06);
+    border:1px solid rgba(163,30,34,0.3);
+  }
+
+  .resultado-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    font-size:15px;
+    margin-bottom:8px;
+  }
+  .resultado.ok .resultado-head{color:var(--verde-ok);}
+  .resultado.error .resultado-head{color:var(--rojo-dnb);}
+  .resultado p{font-size:14px; color:var(--carbon); opacity:0.85;}
+  .resultado .siguiente{
+    margin-top:12px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--gris-texto);
+    border-top:1px solid rgba(27,24,21,0.1);
+    padding-top:12px;
+  }
+
+  /* ---------- FORMULARIO (diseño provisto) ---------- */
+  .contenedor-form{
+    width:100%;
+    max-width:640px;
+    margin:0 auto;
+    background:#fff;
+    padding:32px;
+    border-radius:18px;
+    box-shadow:0 18px 45px rgba(0,0,0,.10);
+    font-family:Arial, Helvetica, sans-serif;
+    color:#1f2937;
+  }
+  .contenedor-form *{box-sizing:border-box;}
+  .contenedor-form h1{
+    margin-top:0;
+    color:#7f1d1d;
+    font-size:24px;
+    font-family:var(--font-body);
+  }
+  .contenedor-form .aviso{
+    background:#fff7ed;
+    border-left:5px solid #f97316;
+    padding:16px;
+    border-radius:8px;
+    margin-bottom:24px;
+    line-height:1.5;
+    font-size:14.5px;
+  }
+  .contenedor-form label{
+    display:block;
+    margin-top:16px;
+    margin-bottom:6px;
+    font-weight:700;
+    font-size:13.5px;
+  }
+  .contenedor-form input{
+    width:100%;
+    padding:13px;
+    border:1px solid #cbd5e1;
+    border-radius:9px;
+    font-size:16px;
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  .contenedor-form input:focus{
+    outline:none;
+    border-color:#7f1d1d;
+    box-shadow:0 0 0 3px rgba(127,29,29,.12);
+  }
+  .contenedor-form button{
+    width:100%;
+    margin-top:24px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#7f1d1d;
+    color:#fff;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .contenedor-form button:hover{background:#671616;}
+  .contenedor-form button:disabled{background:#aaa; cursor:not-allowed;}
+
+  .estado-envio{
+    margin-top:14px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    padding:12px 14px;
+    border-radius:8px;
+    display:none;
+    line-height:1.5;
+  }
+  .estado-envio.show{display:block;}
+  .estado-envio.info{background:#eef2f7; color:#1f2937;}
+  .estado-envio.warn{background:#fbebec; color:#7f1d1d; border:1px solid rgba(127,29,29,.25);}
+  .estado-envio.ok{background:#eaf3ec; color:#2F6B3E; border:1px solid rgba(47,107,62,.25);}
+
+  @media(max-width:600px){
+    .contenedor-form{padding:22px;}
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--carbon);
+    color:rgba(243,238,229,0.45);
+    padding:28px 24px;
+    text-align:center;
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:0.05em;
+  }
+
+  @media (max-width:640px){
+    .hero-grid{grid-template-columns:1fr; text-align:left;}
+    .shield{width:72px; height:72px;}
+    section{padding:48px 20px;}
+    .form-shell{padding:24px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="badge-row">
+      <span class="eyebrow">Dirección Nacional de Bomberos · Uruguay</span>
+      <span class="line"></span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>Escuela de<br>Especialidades<br><span>Validación de Inscripciones</span></h1>
+        <p class="lead">Este trámite confirma tu aprobación de la instancia teórica en Schoology y habilita tu inscripción a la instancia práctica del curso seleccionado.</p>
+      </div>
+      <img class="shield" src="assets/escudo-dnb.jpeg" alt="Escudo de la Dirección Nacional de Bomberos, República Oriental del Uruguay">
+    </div>
+    <div class="hero-status">
+      <span class="dot"></span>
+      Validación automática contra registro de notas Schoology
+    </div>
+  </div>
+</header>
+
+<section class="protocolo" id="protocolo">
+  <div class="shell">
+    <div class="section-head">
+      <div class="num-tag">Protocolo de inscripción</div>
+      <h2>Antes de continuar, seguí este orden</h2>
+      <p>Los seis pasos deben cumplirse en secuencia. Si alguno de ellos no se verifica, la inscripción no se registra.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-marker">1</div>
+        <div class="step-body">
+          <h3>Aprobación de la instancia teórica</h3>
+          <p>Debés haber completado la parte teórica del curso en Schoology con resultado <strong>Aprobado</strong>. Esta nota es la que el sistema verificará más adelante.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2</div>
+        <div class="step-body">
+          <h3>Seleccioná el curso práctico</h3>
+          <p>Elegí, de la lista de cursos prácticos disponibles, aquel al que querés inscribirte.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">3</div>
+        <div class="step-body">
+          <h3>Completá el formulario de validación</h3>
+          <p>Ingresá tus datos personales y de curso para que el sistema pueda cruzarlos con el registro de Schoology.</p>
+        </div>
+      </div>
+
+      <div class="step is-critical">
+        <div class="step-marker">4</div>
+        <div class="step-body">
+          <h3>Sin nota aprobada, no hay envío</h3>
+          <p>Si la nota de aprobación no se valida contra Schoology, la inscripción no podrá enviarse.</p>
+          <span class="step-flag warn">Condición bloqueante</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">5</div>
+        <div class="step-body">
+          <h3>Confirmación por correo</h3>
+          <p>Si la validación con Schoology es exitosa, vas a recibir un correo confirmando el registro de tu inscripción.</p>
+          <span class="step-flag ok">Correo automático</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">6</div>
+        <div class="step-body">
+          <h3>Confirmación final de la Escuela</h3>
+          <p>El correo automático valida tus datos, pero el cupo en el curso práctico lo confirma la Escuela de Especialidades. Aguardá esa comunicación antes de darte por inscripto.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cursos" id="cursos">
+  <div class="shell">
+    <div class="section-head">
+      <div class="num-tag">Paso 2</div>
+      <h2>Seleccioná tu curso práctico</h2>
+      <p>Seleccioná el curso práctico para habilitar su formulario de validación.</p>
+    </div>
+
+    <div class="curso-grid" id="cursoGrid">
+      <!-- generado por JS a partir de CURSOS -->
+    </div>
+  </div>
+</section>
+
+<section class="formulario" id="formulario">
+  <div class="shell">
+    <div class="section-head">
+      <div class="num-tag">Paso 3</div>
+      <h2>Formulario de validación</h2>
+      <p>Al seleccionar un curso, su formulario de validación se carga acá abajo.</p>
+    </div>
+
+    <div class="form-shell" id="formShell">
+      <div class="curso-elegido" id="cursoElegidoBox">
+        <span>Curso seleccionado: <strong id="cursoElegidoNombre">ninguno todavía</strong></span>
+        <button type="button" onclick="document.getElementById('cursos').scrollIntoView({behavior:'smooth'})">Elegir curso</button>
+      </div>
+
+      <div id="sinCursoAviso" class="hint" style="text-align:center; padding:32px 0;">
+        Elegí un curso práctico arriba para ver acá el formulario de validación.
+      </div>
+
+      <div class="form-panel" id="formPanel" style="display:none;">
+        <main class="contenedor-form">
+          <h1 id="formPanelTitulo">Formulario de inscripción</h1>
+          <div class="aviso">
+            Para enviar este formulario debe tener una nota igual o mayor al <b>80%</b>.
+            Si ya realizó un ingreso anterior, se tomará como válido el último formulario enviado.
+          </div>
+
+          <form id="formValidacion" novalidate onsubmit="return false;">
+            <label for="idSchoology">ID de Schoology *</label>
+            <input id="idSchoology" name="idSchoology" type="text" required>
+
+            <label for="nombreApellido">Nombre y apellido *</label>
+            <input id="nombreApellido" name="nombreApellido" type="text" required>
+
+            <label for="telefono">Número de teléfono *</label>
+            <input id="telefono" name="telefono" type="tel" required>
+
+            <label for="mailZimbra">Mail Zimbra *</label>
+            <input id="mailZimbra" name="mailZimbra" type="email" pattern=".+@minterior\.gub\.uy" required>
+
+            <label for="destacamento">Destacamento al cual pertenece *</label>
+            <input id="destacamento" name="destacamento" type="text" required>
+
+            <button type="button" id="btnEnviar">Enviar formulario</button>
+
+            <div id="estadoEnvio" class="estado-envio"></div>
+          </form>
+        </main>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Escuela de Especialidades · Dirección Nacional de Bomberos · República Oriental del Uruguay
+</footer>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN — editar acá antes de publicar
+   ============================================================ */
+
+// Lista de cursos prácticos disponibles.
+// Cada curso tiene su propia URL de Web App de Google Apps Script (formUrl),
+// que es el link al que apunta el botón "Completar formulario" al seleccionarlo.
+// Para agregar otro curso, sumá otro objeto con su propia formUrl.
+const CURSOS = [
+  {
+    id: "rescate-agreste",
+    nombre: "Rescate Agreste",
+    codigo: "AGRESTE-2026",
+    cupos: "Turno único",
+    formUrl: "https://script.google.com/macros/s/AKfycbx6c5U0f5MuK4sA7NSC-Zo_bzJPybY5HGlGixXBpdLJ9C-m4hR6bHF4MqY7NO1iKIsb/exec",
+  },
+];
+
+/* ============================================================
+   LÓGICA
+   ============================================================ */
+
+const cursoGrid = document.getElementById("cursoGrid");
+const cursoElegidoNombre = document.getElementById("cursoElegidoNombre");
+let cursoSeleccionado = null;
+
+function renderCursos(){
+  cursoGrid.innerHTML = "";
+  CURSOS.forEach(curso => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "curso-card";
+    card.dataset.id = curso.id;
+    card.innerHTML = `
+      <span class="tag">${curso.codigo}</span>
+      <h4>${curso.nombre}</h4>
+      <span class="meta">${curso.cupos}</span>
+      <span class="check">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Seleccionado
+      </span>
+    `;
+    card.addEventListener("click", () => seleccionarCurso(curso));
+    cursoGrid.appendChild(card);
+  });
+}
+
+function seleccionarCurso(curso){
+  cursoSeleccionado = curso;
+  document.querySelectorAll(".curso-card").forEach(c => {
+    c.classList.toggle("selected", c.dataset.id === curso.id);
+  });
+  cursoElegidoNombre.textContent = curso.nombre;
+
+  document.getElementById("formPanelTitulo").textContent = "Formulario de validación — " + curso.nombre;
+
+  document.getElementById("formPanel").style.display = "block";
+  document.getElementById("sinCursoAviso").style.display = "none";
+
+  document.getElementById("formulario").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+// Envío controlado por clic directo en el botón (no por el evento
+// "submit" del form, que algunos navegadores pueden interceptar antes
+// de que corra nuestro JS). Todo el estado se muestra en pantalla,
+// sin depender de la consola.
+const estadoEnvio = document.getElementById("estadoEnvio");
+
+function mostrarEstado(tipo, texto){
+  estadoEnvio.className = "estado-envio show " + tipo;
+  estadoEnvio.textContent = texto;
+}
+
+function mostrarResultadoInline(tipo, tituloHtml, mensajeHtml){
+  estadoEnvio.className = "estado-envio show " + tipo;
+  estadoEnvio.innerHTML = "<strong>" + tituloHtml + "</strong><div style='margin-top:8px;'>" + mensajeHtml + "</div>";
+}
+
+// Petición JSONP: carga la respuesta como un <script>, lo que evita
+// por completo el bloqueo de CORS y de iframe que tiene Apps Script.
+function validarPorJSONP(url, datos){
+  return new Promise((resolve, reject) => {
+    const nombreCallback = "dnbCb_" + Date.now();
+    const timeoutId = setTimeout(() => {
+      limpiar();
+      reject(new Error("timeout"));
+    }, 15000);
+
+    function limpiar(){
+      delete window[nombreCallback];
+      if(script.parentNode) script.parentNode.removeChild(script);
+      clearTimeout(timeoutId);
+    }
+
+    window[nombreCallback] = function(resultado){
+      limpiar();
+      resolve(resultado);
+    };
+
+    const params = new URLSearchParams({ ...datos, callback: nombreCallback });
+    const script = document.createElement("script");
+    script.src = url + "?" + params.toString();
+    script.onerror = () => { limpiar(); reject(new Error("network")); };
+    document.head.appendChild(script);
+  });
+}
+
+document.getElementById("btnEnviar").addEventListener("click", async () => {
+  const form = document.getElementById("formValidacion");
+  const btn = document.getElementById("btnEnviar");
+
+  mostrarEstado("info", "Verificando datos...");
+
+  if(!cursoSeleccionado){
+    mostrarEstado("warn", "No hay un curso seleccionado. Volvé a tocar la tarjeta del curso arriba y probá de nuevo.");
+    return;
+  }
+
+  if(!form.checkValidity()){
+    const invalido = form.querySelector(":invalid");
+    const nombreCampo = invalido && invalido.previousElementSibling ? invalido.previousElementSibling.textContent : (invalido ? invalido.name : "un campo");
+    mostrarEstado("warn", "Falta completar o corregir: " + nombreCampo);
+    if(invalido) invalido.focus();
+    return;
+  }
+
+  const datos = {
+    idSchoology: document.getElementById("idSchoology").value.trim(),
+    nombreApellido: document.getElementById("nombreApellido").value.trim(),
+    telefono: document.getElementById("telefono").value.trim(),
+    mailZimbra: document.getElementById("mailZimbra").value.trim(),
+    destacamento: document.getElementById("destacamento").value.trim(),
+  };
+
+  btn.disabled = true;
+  mostrarEstado("info", "Validando con Schoology, un momento...");
+
+  try{
+    const resultado = await validarPorJSONP(cursoSeleccionado.formUrl, datos);
+
+    if(resultado.ok){
+      mostrarResultadoInline("ok", "Formulario enviado correctamente", resultado.mensaje);
+      form.reset();
+    } else {
+      mostrarResultadoInline("warn", "No se pudo enviar el formulario", resultado.mensaje || "No se validó la nota de aprobación.");
+    }
+  } catch(err){
+    mostrarEstado(
+      "warn",
+      "No pudimos validar en la misma página (puede que falte agregar y desplegar el código JSONP en tu Apps Script, o hubo un problema de red). Volvé a intentar en unos segundos."
+    );
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+renderCursos();
+</script>
+
+</body>
+</html>
